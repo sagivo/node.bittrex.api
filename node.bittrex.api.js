@@ -94,7 +94,7 @@ var NodeBittrexApi = function() {
       uri = updateQueryStringParameter(uri, o[i], options[o[i]]);
     }
 
-    op.headers.apisign = crypto.createHmac('sha512', opts.apisecret).update(uri);
+    op.headers.apisign = crypto.createHmac('sha512', opts.apisecret).update(uri).digest('base64');
     op.uri = uri;
     op.timeout = opts.requestTimeoutInSeconds * 1000;
 
