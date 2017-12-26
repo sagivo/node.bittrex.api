@@ -321,6 +321,9 @@ var NodeBittrexApi = function() {
           websocketMarketsCallback = callback;
           setMessageReceivedWs();
         }, force);
+      },
+      unsubscribe: function() {
+        wsclient.end();
       }
     },
     sendCustomRequest: function(request_string, callback, credentials) {

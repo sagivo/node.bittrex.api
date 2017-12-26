@@ -216,6 +216,15 @@ bittrex.websockets.subscribe(['BTC-ETH','BTC-SC','BTC-ZEN'], function(data, clie
 });
 ```
 
+#### websockets.unsubscribe
+This will close your websocket connection. Please note that by default the websocket client will
+try to recoonect so don't forget to set `autoReconnect` to `false`.
+```javascript
+bittrexApi.options({ websockets: { autoReconnect: false } });
+/...
+bittrex.websockets.unsubscribe();
+```
+
 
 #### Websocket serviceHandlers example
 You can override the libraries logic for the following events. Note, this will
