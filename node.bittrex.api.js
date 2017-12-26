@@ -12,7 +12,7 @@ var NodeBittrexApi = function() {
 
   var request = require('request'),
     assign = require('object-assign'),
-    hmac_sha512 = require('./hmac-sha512.js'),
+    crypto = require('crypto'),
     jsonic = require('jsonic'),
     signalR = require('signalr-client'),
     wsclient,
@@ -94,7 +94,7 @@ var NodeBittrexApi = function() {
       uri = updateQueryStringParameter(uri, o[i], options[o[i]]);
     }
 
-    op.headers.apisign = hmac_sha512.HmacSHA512(uri, opts.apisecret); // setting the HMAC hash `apisign` http header
+    op.headers.apisign = crypto.createHmac('sha512', opts.apisecret).update(uri);
     op.uri = uri;
     op.timeout = opts.requestTimeoutInSeconds * 1000;
 
