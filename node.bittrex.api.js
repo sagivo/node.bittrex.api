@@ -12,9 +12,9 @@ var NodeBittrexApi = function() {
 
   var request = require('request'),
     assign = require('object-assign'),
-    hmac_sha512 = require('./hmac-sha512.js'),
     jsonic = require('jsonic'),
     signalR = require('signalr-client'),
+    crypto = require('crypto'),
     wsclient,
     cloudscraper = require('cloudscraper');
 
@@ -94,7 +94,7 @@ var NodeBittrexApi = function() {
       uri = updateQueryStringParameter(uri, o[i], options[o[i]]);
     }
 
-    op.headers.apisign = hmac_sha512.HmacSHA512(uri, opts.apisecret); // setting the HMAC hash `apisign` http header
+    op.headers.apisign = crypto.createHmac('sha512', opts.apisecret).update(uri);
     op.uri = uri;
     op.timeout = opts.requestTimeoutInSeconds * 1000;
 
@@ -305,22 +305,22 @@ var NodeBittrexApi = function() {
       extractOptions(options);
     },
     websockets: {
-      client: function(callback, force) {
-        return connectws(callback, force);
+      client: function(callback) {
+        return connectws(callback);
       },
-      listen: function(callback, force) {
-        connectws(function() {
+      listen: function(callback) {
+        return connectws(function() {
           websocketGlobalTickers = true;
           websocketGlobalTickerCallback = callback;
           setMessageReceivedWs();
-        }, force);
+        });
       },
-      subscribe: function(markets, callback, force) {
+      subscribe: function(markets, callback) {
         connectws(function() {
           websocketMarkets = markets;
           websocketMarketsCallback = callback;
           setMessageReceivedWs();
-        }, force);
+        });
       },
       unsubscribe: function() {
         wsclient.end();
